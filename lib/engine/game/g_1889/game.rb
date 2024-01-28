@@ -94,6 +94,53 @@ module Engine
           },
         ].freeze
 
+        PHASES_FOR_PHASE6_DROP = [
+          {
+            name: '2',
+            train_limit: 4,
+            tiles: [:yellow],
+            operating_rounds: 1,
+          },
+          {
+            name: '3',
+            on: '3',
+            train_limit: 4,
+            tiles: %i[yellow green],
+            operating_rounds: 2,
+            status: ['can_buy_companies'],
+          },
+          {
+            name: '4',
+            on: '4',
+            train_limit: 3,
+            tiles: %i[yellow green],
+            operating_rounds: 2,
+            status: ['can_buy_companies'],
+          },
+          {
+            name: '5',
+            on: '5',
+            train_limit: 3,
+            tiles: %i[yellow green brown],
+            operating_rounds: 3,
+          },
+          {
+            name: '6',
+            on: '6',
+            train_limit: 2,
+            tiles: %i[yellow green brown],
+            operating_rounds: 3,
+          },
+          {
+            name: 'D',
+            on: 'D',
+            train_limit: 2,
+            tiles: %i[yellow green brown],
+            operating_rounds: 3,
+          },
+        ].freeze
+
+
         TRAINS = [
           {
             name: '2',
@@ -166,6 +213,7 @@ module Engine
 
         def setup
           remove_company(company_by_id('SIR')) if two_player? && !beginner_game?
+          reset_train_limit_for_phase_five if phase_six_train_limit_drop?
           return unless beginner_game?
 
           neuter_private_companies
@@ -175,6 +223,12 @@ module Engine
           # companies are randomly distributed to players and they buy their company
           @companies.sort_by! { rand }
           @players.zip(@companies).each { |p, c| buy_company(p, c) }
+        end
+
+        def reset_train_limit_for_phase_five
+           PHASES = PHASES_FOR_PHASE6_DROP
+
+           @log << "Optional rule in this game: Train limit will drop to 2 on the 6 train."
         end
 
         def operating_round(round_num)
@@ -212,6 +266,10 @@ module Engine
 
         def beginner_game?
           @optional_rules.include?(:beginner_game)
+        end
+
+        def phase_six_train_limit_drop?
+          @optional_rules.include?(:phase_six_train_limit_drop)
         end
 
         def remove_beginner_tiles
