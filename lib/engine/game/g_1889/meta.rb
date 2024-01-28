@@ -26,6 +26,11 @@ module Engine
             short_name: 'Beginner Game',
             desc: 'Simpler privates, more tiles available',
           },
+          {
+            sym: :phase_six_train_limit_drop,
+            short_name: 'Delayed Train Limit Drop',
+            desc: 'Train limit drops to 2 on the 6-Train instead of the 5-Train',
+          },
         ].freeze
       end
     end
