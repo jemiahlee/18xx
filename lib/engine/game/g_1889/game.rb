@@ -213,7 +213,6 @@ module Engine
 
         def setup
           remove_company(company_by_id('SIR')) if two_player? && !beginner_game?
-          reset_train_limit_for_phase_five if phase_six_train_limit_drop?
           return unless beginner_game?
 
           neuter_private_companies
@@ -225,10 +224,14 @@ module Engine
           @players.zip(@companies).each { |p, c| buy_company(p, c) }
         end
 
-        def reset_train_limit_for_phase_five
-          self.class::PHASES = self.class::PHASES_FOR_PHASE6_DROP
+        def game_phases
 
-          @log << "Optional rule in this game: Train limit will drop to 2 on the 6 train."
+          if phase_six_train_limit_drop?
+            @log << "Optional rule in this game: Train limit will drop to 2 on the 6 train."
+            return PHASES_FOR_PHASE6_DROP
+          end
+
+          return PHASES
         end
 
         def operating_round(round_num)
