@@ -226,9 +226,9 @@ module Engine
         end
 
         def reset_train_limit_for_phase_five
-           PHASES = PHASES_FOR_PHASE6_DROP
+          self.class::PHASES = self.class::PHASES_FOR_PHASE6_DROP
 
-           @log << "Optional rule in this game: Train limit will drop to 2 on the 6 train."
+          @log << "Optional rule in this game: Train limit will drop to 2 on the 6 train."
         end
 
         def operating_round(round_num)
