@@ -16,7 +16,7 @@ module Engine
           end
 
           def select_entities
-            @game.merge_corporations.sort
+            @game.merge_corporations.select(&:operated?).sort
           end
 
           def setup
@@ -24,6 +24,58 @@ module Engine
             skip_steps
             next_entity! if finished?
           end
+
+          def after_process(action)
+            return if action.free?
+
+            if (pme = @post_merge_entity)
+              @post_merge_entity = nil
+              @steps.each(&:unpass!)
+              @steps.each(&:setup)
+
+              inserted = false
+              unless @entities.include?(pme)
+                @entities.insert(@entity_index + 1, pme)
+                inserted = true
+              end
+
+              pme_idx = @entities.find_index(pme)
+              @game.next_turn!
+              @entity_index = pme_idx
+
+              skip_steps
+              unless finished?
+                # Post-merge entity has targets — let it act
+                return
+              end
+
+              # No targets: remove inserted system and fall through to advance
+              @entities.delete(pme) if inserted
+            end
+
+            return if active_step
+
+            @game.players.each(&:unpass!)
+            next_entity!
+          end
+
+          def next_entity!
+            next_entity_index! if @entities.any?
+            return if @entities.empty? || @entity_index.zero?
+
+            @steps.each(&:unpass!)
+            @steps.each(&:setup)
+
+            skip_steps
+            next_entity! if finished?
+          end
+
+          # Suppress the normal entity-change triggered by close_corporation during a merger
+          def force_next_entity!
+            # No-op: mergers in game.rb manage entity advancement themselves
+          end
+
+          attr_reader :entities
         end
       end
     end

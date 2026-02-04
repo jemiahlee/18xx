@@ -8,6 +8,15 @@ module Engine
     module G1832
       module Step
         class Track < Engine::Step::Track
+          def old_paths_maintained?(hex, tile)
+            boomtown_upgrade = Engine::Game::G1832::Game::BOOMTOWN_HEXES.include?(hex.id) &&
+                               hex.tile.color == :yellow && hex.tile.towns.one? && hex.tile.cities.empty? &&
+                               tile.color == :yellow && tile.cities.one? && tile.towns.empty?
+            return hex.tile.exits.all? { |e| tile.exits.include?(e) } if boomtown_upgrade
+
+            super
+          end
+
           def process_lay_tile(action)
             lay_tile_action(action)
 
@@ -60,6 +69,11 @@ module Engine
             @log << log_message
             corporation.coal_token = true
             @game.clear_token_graph_for_entity(corporation)
+          end
+
+          def pass!
+            super
+            @game.track_action_processed(current_entity)
           end
 
           def hex_neighbors(entity, hex)

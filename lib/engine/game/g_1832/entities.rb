@@ -94,7 +94,7 @@ module Engine
           },
           {
             sym: 'GRR',
-            name: 'Georgia Railraod',
+            name: 'Georgia Railroad',
             logo: '1832/GRR',
             simple_logo: '1832/GRR.alt',
             tokens: [0, 40],
@@ -211,7 +211,7 @@ module Engine
           },
         ].freeze
 
-        COMPANIES = [
+        STANDARD_COMPANIES = [
           {
             name: 'Carolina Stagecoach Company',
             sym: 'P1',
@@ -289,6 +289,8 @@ module Engine
               owner_type: 'player',
               corporations: 'any',
               from: 'ipo',
+              when: 'stock_round',
+              count: 1,
             },
                         { type: 'no_buy' }],
             color: nil,
@@ -309,6 +311,138 @@ module Engine
                   ' When other companies connect to the Coalfields, '\
                   'they may buy a Coal token (if available) during their operating round for $80'\
                   ' ($40 goes to the corporation owning the Coal private company).',
+          },
+          {
+            name: 'Central Railroad & Canal',
+            sym: 'P7',
+            value: 200,
+            revenue: 30,
+            desc: 'Comes with the president\'s share of the Central of Georgia Railway. The player buying this'\
+                  ' private company must immediately set the par value of the CG. ',
+            abilities: [
+                        { type: 'close', when: 'bought_train', corporation: 'CG' },
+                        { type: 'no_buy' },
+                        { type: 'shares', shares: 'CG_0' },
+            ],
+            color: nil,
+          },
+        ].freeze
+
+        SOUTHERN_BANK_VARIANT_COMPANIES = [
+          {
+            name: 'Carolina Stagecoach Company',
+            sym: 'P1',
+            value: 20,
+            revenue: 5,
+            desc: 'No special abilities.',
+            abilities: [],
+            color: nil,
+          },
+          {
+            name: 'Cotton Warehouse',
+            value: 40,
+            revenue: 10,
+            desc: 'This company has a $10 token which may be placed in any non-coastal city'\
+                  ' (Atlantic or Gulf Coast) as an extra token lay during the'\
+                  ' token placement step of an owning public company\'s operating round.',
+            sym: 'P2',
+            abilities: [
+              {
+                type: 'assign_hexes',
+                when: 'owning_corp_or_turn',
+                hexes: %w[C7 C11 D16 D20 F10 F6],
+                count: 1,
+                owner_type: 'corporation',
+              },
+              {
+                type: 'assign_corporation',
+                when: 'sold',
+                count: 1,
+                owner_type: 'corporation',
+              },
+            ],
+            color: nil,
+          },
+          {
+            name: 'Atlantic Shipping',
+            value: 50,
+            revenue: 10,
+            desc: 'This company has a Port token which may be placed on any city'\
+                  ' on the coasts as an extra token lay during the token placement'\
+                  ' step of an owning public company\'s operating round. All eligible cities are marked with an anchor symbol.'\
+                  ' This token increases the value of the selected city by $20'\
+                  ' for the owning company and by $10 for all other companies.',
+            sym: 'P3',
+            abilities: [
+              {
+                type: 'assign_hexes',
+                hexes: %w[B24 E21 G17 H16 I3 J4 J2 J10 J14 M13 N16 E21],
+                count: 1,
+                owner_type: 'corporation',
+                when: 'owning_corp_or_turn',
+              },
+              {
+                type: 'assign_corporation',
+                when: 'sold',
+                count: 1,
+                owner_type: 'corporation',
+              },
+            ],
+            color: nil,
+          },
+          {
+            name: 'London Investment',
+            value: 70,
+            revenue: 10,
+            desc: 'This company represents those shrewd investors in London. They have hired'\
+                  ' you to invest their money in the new Southern railways.'\
+                  ' They will purchase a share of your choice in any newly started company.'\
+                  ' You get the share. After the company pays its first dividend, '\
+                  'the London Investment Company is closed, as they realize they have paid you'\
+                  ' for nothing and you spent the money for yourself.',
+            sym: 'P4',
+            abilities: [{
+              type: 'exchange',
+              owner_type: 'player',
+              corporations: 'any',
+              from: 'ipo',
+              when: 'stock_round',
+              count: 1,
+            },
+                        { type: 'no_buy' }],
+            color: nil,
+          },
+          {
+            name: 'West Virginia Coalfields',
+            value: 80,
+            revenue: 15,
+            sym: 'P5',
+            abilities: [
+              {
+                type: 'blocks_hexes',
+                owner_type: 'player',
+                hexes: %w[B12 B16 C13 C15],
+              },
+            ],
+            desc: 'This private company gives the owning company a Coal token for free.'\
+                  ' When other companies connect to the Coalfields, '\
+                  'they may buy a Coal token (if available) during their operating round for $80'\
+                  ' ($40 goes to the corporation owning the Coal private company).',
+          },
+          {
+            name: 'Southern Bank',
+            sym: 'P6',
+            value: 100,
+            revenue: 10,
+            desc: 'Enables mortgage financing. The owning corporation may mortgage one train or placed '\
+                  'token; the mortgage value is set at half-to-double that asset\'s value. The corporation '\
+                  'pays 10% interest per OR at the start of its operating turn (nothing if it cannot pay). '\
+                  'The mortgage may be repaid for half-to-full asset value. Only one mortgage may be '\
+                  'outstanding at a time. Does not pay $10 revenue unless a mortgage is outstanding. '\
+                  'Does not close at first 5-train. Cannot be sold after the first 6-train. '\
+                  'Worth face value ($100) at game end.',
+            abilities: [],
+            color: nil,
           },
           {
             name: 'Central Railroad & Canal',

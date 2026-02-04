@@ -34,3 +34,7 @@ validate*.json
 .idea
 
 .vscode
+CLAUDE.md
+.claude
+
+1832-rules.pdf

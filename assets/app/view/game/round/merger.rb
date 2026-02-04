@@ -180,12 +180,21 @@ module View
                 end
               end
 
-              if @step.show_other_players ||
-                  !merge_corporation.player ||
-                  merge_corporation.player == corporation.player
-                do_merge.call
-              else
+              different_presidents = merge_corporation.player &&
+                                     corporation.player &&
+                                     merge_corporation.player != corporation.player
+
+              if different_presidents && !@step.show_other_players
                 check_consent(corporation, merge_corporation.player, do_merge)
+              elsif different_presidents
+                store(:confirm_opts, {
+                  color: :yellow,
+                  click: do_merge,
+                  message: "#{corporation.name} (#{corporation.owner.name}) merging with " \
+                           "#{merge_corporation.name} (#{merge_corporation.owner.name}) — confirm?",
+                }, skip: false)
+              else
+                do_merge.call
               end
 
             else

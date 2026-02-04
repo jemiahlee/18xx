@@ -13,6 +13,7 @@ module View
         step = @game.round.active_step(@selected_company)
         return nil unless share
         return nil if !step.respond_to?(:can_gain?) || !step.can_gain?(@selected_company.owner, share, exchange: true)
+        return nil if step.respond_to?(:can_exchange?) && !step.can_exchange?(@selected_company, share.to_bundle)
 
         exchange = lambda do
           process_action(Engine::Action::BuyShares.new(@selected_company, shares: share))

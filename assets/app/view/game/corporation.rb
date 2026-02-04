@@ -471,10 +471,12 @@ module View
         end
 
         if !num_treasury_shares.empty? && !@corporation.ipo_is_treasury? && !@corporation.treasury_as_holding
+          issue_step = @game.round.steps.find { |s| s.respond_to?(:issue_par) }
+          treasury_price = issue_step ? issue_step.issue_par(@corporation) : @corporation.share_price
           pool_rows << h('tr.ipo', [
             h('td.left', 'Treasury'),
             h('td.right', shares_props, num_treasury_shares),
-            h('td.padded_number', share_price_str(@corporation.share_price)),
+            h('td.padded_number', share_price_str(treasury_price)),
           ])
         end
 

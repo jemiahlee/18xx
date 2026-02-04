@@ -311,8 +311,10 @@ module View
       def render_share_exchange(shares, entity, source: 'Market')
         return [] unless @step.respond_to?(:can_gain?)
 
+        exchange_step = @game.round.active_step(entity)
         shares.map do |share|
           next unless @step.can_gain?(entity.owner, share, exchange: true)
+          next if exchange_step.respond_to?(:can_exchange?) && !exchange_step.can_exchange?(entity, share.to_bundle)
           next if share.president && !@game.exchange_for_partial_presidency?
 
           name = entity.company? ? entity.sym : entity.name

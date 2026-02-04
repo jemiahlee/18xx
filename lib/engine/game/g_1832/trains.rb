@@ -4,7 +4,7 @@ module Engine
   module Game
     module G1832
       module Trains
-        TRAINS = [
+        STANDARD_TRAINS = [
           {
             name: '2',
             distance: 2,
@@ -40,7 +40,7 @@ module Engine
             distance: 6,
             price: 630,
             num: 3,
-            events: [{ 'type' => 'remove_tokens' }],
+            events: [{ 'type' => 'final_merger_chance' }, { 'type' => 'remove_tokens' }],
           },
           {
             name: '8',
@@ -60,6 +60,54 @@ module Engine
             distance: 12,
             price: 1100,
             num: 99,
+          },
+        ].freeze
+
+
+        DIESEL_VARIANT_TRAINS = [
+          {
+            name: '2',
+            distance: 2,
+            price: 80,
+            rusts_on: '4',
+            num: 7,
+          },
+          {
+            name: '3',
+            distance: 3,
+            price: 180,
+            rusts_on: '6',
+            num: 6,
+            events: [{ 'type' => 'companies_buyable' }],
+          },
+          {
+            name: '4',
+            distance: 4,
+            price: 300,
+            rusts_on: 'D',
+            num: 4,
+          },
+          {
+            name: '5',
+            distance: 5,
+            price: 450,
+            num: 3,
+            events: [{ 'type' => 'close_companies' }],
+          },
+          {
+            name: '6',
+            distance: 6,
+            price: 630,
+            num: 3,
+            events: [{ 'type' => 'final_merger_chance' }, { 'type' => 'remove_tokens' }],
+          },
+          {
+            name: 'D',
+            distance: 999,
+            price: 1100,
+            num: 20,
+            available_on: '6',
+            discount: { '4' => 300, '5' => 300, '6' => 300 },
           },
         ].freeze
       end
